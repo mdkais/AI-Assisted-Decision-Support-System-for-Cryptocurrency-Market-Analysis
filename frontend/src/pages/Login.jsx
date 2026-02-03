@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
-import { Lock, Mail, ChevronRight, Cpu } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react';
+import '../styles/login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -25,81 +27,184 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] relative overflow-hidden font-sans">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-900/20 rounded-full blur-[120px] animate-pulse"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-900/20 rounded-full blur-[120px] animate-pulse delay-700"></div>
+    <div className="login-container">
+      {/* Animated Background */}
+      <div className="login-background">
+        <div className="bg-orb orb-1"></div>
+        <div className="bg-orb orb-2"></div>
+        <div className="bg-orb orb-3"></div>
+      </div>
 
-      <div className="max-w-md w-full mx-4 relative z-10 animate-in fade-in zoom-in duration-500">
-        {/* Branding/Logo Area */}
-        <div className="flex justify-center mb-8">
-          <div className="p-4 bg-blue-600/10 rounded-2xl border border-blue-500/20 shadow-xl">
-            <Cpu className="text-blue-500 w-10 h-10" />
-          </div>
-        </div>
-
-        <div className="bg-[#1e293b]/70 backdrop-blur-xl rounded-3xl p-10 shadow-2xl border border-white/10">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl font-black text-white tracking-tight mb-2">Welcome Back</h2>
-            <p className="text-slate-400 font-medium">Access your AI market insights</p>
-          </div>
+      {/* Left Side - Login Form */}
+      <div className="login-form-section">
+        <div className="login-form-wrapper">
           
+          {/* Logo/Brand */}
+          <div className="login-header">
+            <div className="welcome-badge">
+              <Sparkles className="badge-icon" />
+              <span>Welcome back</span>
+            </div>
+            
+            <h1 className="login-title">Sign in to your account</h1>
+            <p className="login-subtitle">Enter your credentials to access your dashboard</p>
+          </div>
+
+          {/* Error Message */}
           {error && (
-            <div className="bg-rose-500/10 border border-rose-500/50 text-rose-400 p-4 rounded-xl mb-6 text-sm flex items-center gap-2 animate-shake">
-              {error}
+            <div className="error-message">
+              <p>{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Email Address</label>
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={18} />
-                <input 
-                  type="email" 
-                  placeholder="name@company.com"
-                  className="w-full bg-[#0f172a] border border-slate-700 rounded-xl py-4 pl-12 pr-4 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-slate-600"
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  required 
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="login-form">
+            
+            {/* Email Field */}
+            <div className="form-group">
+              <label className="form-label">Email address</label>
+              <div className="input-wrapper">
+                <Mail className="input-icon" />
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="form-input"
+                  placeholder="you@example.com"
+                  required
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Password</label>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={18} />
-                <input 
-                  type="password" 
-                  placeholder="••••••••"
-                  className="w-full bg-[#0f172a] border border-slate-700 rounded-xl py-4 pl-12 pr-4 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-slate-600"
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  required 
+            {/* Password Field */}
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <div className="input-wrapper">
+                <Lock className="input-icon" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="form-input"
+                  placeholder="Enter your password"
+                  required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="password-toggle"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            {/* Remember Me & Forgot Password */}
+            <div className="form-footer">
+              <label className="remember-label">
+                <input type="checkbox" className="remember-checkbox" />
+                <span>Remember me</span>
+              </label>
+              <Link to="/forgot-password" className="forgot-link">
+                Forgot password?
+              </Link>
+            </div>
+
+            {/* Login Button */}
+            <button
+              type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl transition-all shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2 group"
+              className="submit-button"
             >
               {isLoading ? (
-                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <>
+                  <div className="spinner"></div>
+                  <span>Signing in...</span>
+                </>
               ) : (
                 <>
-                  Sign In <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <span>Sign in</span>
+                  <ArrowRight className="button-icon" />
                 </>
               )}
             </button>
+
+            {/* Divider */}
+            <div className="divider">
+              <span>Or continue with</span>
+            </div>
+
+            {/* Social Login Buttons */}
+            <div className="social-buttons">
+              <button type="button" className="social-button google-button">
+                <svg className="social-icon" viewBox="0 0 24 24">
+                  <path fill="#EA4335" d="M5.26620003,9.76452941 C6.19878754,6.93863203 8.85444915,4.90909091 12,4.90909091 C13.6909091,4.90909091 15.2181818,5.50909091 16.4181818,6.49090909 L19.9090909,3 C17.7818182,1.14545455 15.0545455,0 12,0 C7.27006974,0 3.1977497,2.69829785 1.23999023,6.65002441 L5.26620003,9.76452941 Z"/>
+                  <path fill="#34A853" d="M16.0407269,18.0125889 C14.9509167,18.7163016 13.5660892,19.0909091 12,19.0909091 C8.86648613,19.0909091 6.21911939,17.076871 5.27698177,14.2678769 L1.23746264,17.3349879 C3.19279051,21.2936293 7.26500293,24 12,24 C14.9328362,24 17.7353462,22.9573905 19.834192,20.9995801 L16.0407269,18.0125889 Z"/>
+                  <path fill="#4A90E2" d="M19.834192,20.9995801 C22.0291676,18.9520994 23.4545455,15.903663 23.4545455,12 C23.4545455,11.2909091 23.3454545,10.5818182 23.1818182,9.90909091 L12,9.90909091 L12,14.4545455 L18.4363636,14.4545455 C18.1187732,16.013626 17.2662994,17.2212117 16.0407269,18.0125889 L19.834192,20.9995801 Z"/>
+                  <path fill="#FBBC05" d="M5.27698177,14.2678769 C5.03832634,13.556323 4.90909091,12.7937589 4.90909091,12 C4.90909091,11.2182781 5.03443647,10.4668121 5.26620003,9.76452941 L1.23999023,6.65002441 C0.43658717,8.26043162 0,10.0753848 0,12 C0,13.9195484 0.444780743,15.7301709 1.23746264,17.3349879 L5.27698177,14.2678769 Z"/>
+                </svg>
+                <span>Google</span>
+              </button>
+
+              <button type="button" className="social-button facebook-button">
+                <svg className="social-icon" fill="#1877F2" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                <span>Facebook</span>
+              </button>
+            </div>
           </form>
 
-          <div className="mt-8 pt-8 border-t border-slate-700/50 text-center">
-            <p className="text-slate-400 font-medium">
-              New to the platform? <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-bold transition-colors">Create Account</Link>
+          {/* Sign Up Link */}
+          <p className="signup-text">
+            Don't have an account?{' '}
+            <Link to="/signup" className="signup-link">
+              Create account
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      {/* Right Side - Branding */}
+      <div className="login-branding-section">
+        {/* Animated background elements */}
+        <div className="branding-background">
+          <div className="branding-orb branding-orb-1"></div>
+          <div className="branding-orb branding-orb-2"></div>
+          <div className="branding-orb branding-orb-3"></div>
+        </div>
+
+        {/* Content */}
+        <div className="branding-content">
+          <div className="branding-text">
+            <h2 className="branding-title">
+              Welcome to the future of productivity
+            </h2>
+            <p className="branding-subtitle">
+              Join thousands of users who trust our platform to streamline their workflow and boost their efficiency.
             </p>
+            
+            {/* Feature highlights */}
+            <div className="feature-list">
+              <div className="feature-item">
+                <div className="feature-dot"></div>
+                <span>Secure authentication & data protection</span>
+              </div>
+              <div className="feature-item">
+                <div className="feature-dot"></div>
+                <span>Real-time collaboration tools</span>
+              </div>
+              <div className="feature-item">
+                <div className="feature-dot"></div>
+                <span>Advanced analytics dashboard</span>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Decorative grid pattern */}
+        <div className="grid-overlay"></div>
+        <div className="grid-pattern"></div>
       </div>
     </div>
   );

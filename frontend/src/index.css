@@ -27,3 +27,22 @@
         transform: translateY(0);
     }
 }
+
+/* Floating Background Animation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-25px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 10s ease-in-out infinite;
+}
