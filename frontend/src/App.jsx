@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Coins from './pages/Coins';
 import Comparison from './pages/Comparison';
+import NewsFeed from './pages/NewsFeed';
 
 function App() {
   return (
@@ -39,6 +40,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/news"
+        element={
+          <ProtectedRoute>
+            <NewsFeed/>
+          </ProtectedRoute>
+        }/>
 
         {/* Default redirect */}
         <Route path="*" element={<Navigate to="/login" replace />} />

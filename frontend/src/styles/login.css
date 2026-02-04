@@ -9,6 +9,23 @@
    CONTAINER & LAYOUT
    ============================================ */
 
+   :root {
+       --bg-primary: #0a0a0f;
+       --bg-secondary: #13131a;
+       --bg-tertiary: #1a1a24;
+       --border-color: rgba(255, 255, 255, 0.05);
+       --border-color-hover: rgba(255, 255, 255, 0.1);
+       --text-primary: #ffffff;
+       --text-secondary: rgba(255, 255, 255, 0.7);
+       --text-tertiary: rgba(255, 255, 255, 0.4);
+       --blue-primary: #3b82f6;
+       --blue-secondary: #2563eb;
+       --purple-primary: #8b5cf6;
+       --cyan-primary: #06b6d4;
+       --green-primary: #10b981;
+       --red-primary: #ef4444;
+   }
+
 .login-container {
     min-height: 100vh;
     display: flex;
@@ -89,7 +106,7 @@
     align-items: center;
     justify-content: center;
     padding: 3rem 1.5rem;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);;
     backdrop-filter: blur(20px);
     position: relative;
     z-index: 10;
@@ -136,7 +153,7 @@
 .login-title {
     font-size: 2.5rem;
     font-weight: 800;
-    color: #111827;
+    color: var(--blue-primary);
     margin-bottom: 0.75rem;
     line-height: 1.2;
     letter-spacing: -0.025em;
@@ -145,7 +162,7 @@
 
 .login-subtitle {
     font-size: 1rem;
-    color: #6b7280;
+    color: var(--blue-primary);
     font-weight: 400;
     line-height: 1.6;
     animation: slideDown 0.6s ease-out 0.2s backwards;
@@ -214,7 +231,7 @@
 .form-label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--cyan-primary);
     letter-spacing: 0.01em;
 }
 
@@ -305,13 +322,13 @@
     gap: 0.5rem;
     cursor: pointer;
     font-size: 0.875rem;
-    color: #4b5563;
+    color: var(--cyan-primary);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .remember-label:hover {
-    color: #111827;
+    color: #ffffff;
 }
 
 .remember-checkbox {
@@ -326,11 +343,10 @@
     font-weight: 600;
     color: #3b82f6;
     text-decoration: none;
-    transition: color 0.3s ease;
-}
+    transition: color 0.3s ease;}
 
 .forgot-link:hover {
-    color: #2563eb;
+    color: #fff;
     text-decoration: underline;
 }
 
@@ -441,11 +457,11 @@
 
 .divider span {
     position: relative;
-    background: rgba(255, 255, 255, 0.95);
+    background: #0a0a0f;
     padding: 0 1rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #6b7280;
+    color: #3b82f6;
     letter-spacing: 0.025em;
 }
 
@@ -509,7 +525,7 @@
 }
 
 .signup-link:hover {
-    color: #2563eb;
+    color: #fff;
     text-decoration: underline;
 }
 
@@ -519,7 +535,7 @@
 
 .login-branding-section {
     flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--blue-primary), var(--purple-primary));
     position: relative;
     overflow: hidden;
     display: none;
@@ -572,7 +588,7 @@
     justify-content: center;
     padding: 4rem;
     height: 100%;
-    color: #ffffff;
+    color: var(--bg-primary);
 }
 
 .branding-text {
@@ -592,7 +608,7 @@
     font-size: 1.25rem;
     line-height: 1.7;
     margin-bottom: 2.5rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--bg-secondary);
     font-weight: 400;
     animation: fadeInUp 0.8s ease-out 0.2s backwards;
 }
@@ -608,7 +624,7 @@
     align-items: center;
     gap: 1rem;
     animation: fadeInUp 0.8s ease-out backwards;
-    color: rgba(255, 255, 255, 0.95);
+    color: var(--bg-tertiary);
     font-size: 1rem;
     font-weight: 500;
 }
@@ -626,10 +642,11 @@
 }
 
 .feature-dot {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    background: #ffffff;
+    opacity: 50%;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -642,7 +659,7 @@
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background: #ffffff;
+    background: #686666;
 }
 
 .grid-overlay {

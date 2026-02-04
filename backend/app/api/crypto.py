@@ -104,3 +104,31 @@ def get_coin_analysis(coin_id: str):
         "confidence": "Based on 90-day Random Forest Analysis",
         "disclaimer": "Analytical insights for educational purposes only."
     }
+
+@router.get("/news/{coin_id}")
+def get_crypto_news(coin_id: str):
+    # For a production viva, use an API like CryptoPanic or NewsAPI
+    # Here we simulate the fetch logic
+    url = f"https://newsapi.org/v2/everything?q={coin_id}+crypto&sortBy=publishedAt&apiKey=YOUR_KEY"
+    
+    try:
+        # In a real demo, you'd perform: response = requests.get(url)
+        # We will return structured mock data that matches a real API response
+        return [
+            {
+                "title": f"{coin_id.capitalize()} sees massive institutional inflow",
+                "source": "CryptoDaily",
+                "url": "#",
+                "sentiment": "Positive",
+                "time": "2h ago"
+            },
+            {
+                "title": "New regulatory framework proposed for digital assets",
+                "source": "FinanceWire",
+                "url": "#",
+                "sentiment": "Neutral",
+                "time": "5h ago"
+            }
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Could not fetch news")

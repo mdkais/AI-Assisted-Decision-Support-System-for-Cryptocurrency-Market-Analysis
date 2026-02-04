@@ -5,7 +5,7 @@ import api from '../api';
 import { 
   TrendingUp, TrendingDown, BrainCircuit, Search, 
   Loader2, LogOut, Scale, Activity, ChevronRight, 
-  Globe, Sparkles, AlertCircle, BarChart3, Zap
+  Globe, Sparkles, AlertCircle, BarChart3, Zap, Newspaper, LayoutDashboard
 } from 'lucide-react';
 import '../styles/dashboard.css';
 
@@ -88,7 +88,7 @@ const Dashboard = () => {
           <p className="nav-label">Navigation</p>
           
           <Link to="/dashboard" className="nav-item nav-item-active">
-            <Activity size={20} />
+            <LayoutDashboard size={20} />
             <span>Dashboard</span>
           </Link>
 
@@ -102,9 +102,9 @@ const Dashboard = () => {
             <span>Compare Assets</span>
           </Link>
 
-          <Link to="/analytics" className="nav-item">
-            <BarChart3 size={20} />
-            <span>Advanced Analytics</span>
+          <Link to="/news" className="nav-item">
+            <Newspaper size={20} />
+            <span>News</span>
           </Link>
         </nav>
 

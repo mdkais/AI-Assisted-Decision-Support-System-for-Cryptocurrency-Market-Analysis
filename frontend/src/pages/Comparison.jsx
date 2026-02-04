@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
-import { Scale, ArrowLeft, BrainCircuit, TrendingUp, TrendingDown, Loader2, Zap } from 'lucide-react';
+import { 
+  Scale, ArrowLeft, BrainCircuit, TrendingUp, 
+  TrendingDown, Loader2, Zap, Sparkles, Activity, LayoutDashboard
+} from 'lucide-react';
+import '../styles/comparison.css';
 
 const Comparison = () => {
   const [allCoins, setAllCoins] = useState([]);
@@ -16,7 +20,9 @@ const Comparison = () => {
       try {
         const res = await api.get('/crypto/list-coins');
         setAllCoins(res.data);
-      } catch (err) { console.error(err); }
+      } catch (err) { 
+        console.error(err); 
+      }
     };
     fetchList();
   }, []);
@@ -31,8 +37,11 @@ const Comparison = () => {
         ]);
         setDataA(resA.data);
         setDataB(resB.data);
-      } catch (err) { console.error(err); }
-      finally { setLoading(false); }
+      } catch (err) { 
+        console.error(err); 
+      } finally { 
+        setLoading(false); 
+      }
     };
     fetchComparison();
   }, [coinA, coinB]);
@@ -45,92 +54,155 @@ const Comparison = () => {
     return "Neutral";
   };
 
-  const ComparisonCard = ({ analysis, onSelect, isWinner }) => (
-    <div className={`relative transition-all duration-500 rounded-3xl p-1 ${isWinner ? 'bg-gradient-to-b from-blue-500 to-purple-600 shadow-[0_0_30px_rgba(59,130,246,0.2)]' : 'bg-gray-700/50'}`}>
-      <div className="bg-[#1e293b] rounded-[22px] p-8 h-full">
-        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block">Select Asset</label>
-        <select 
-          className="w-full bg-[#0f172a] border border-gray-700 p-4 rounded-xl mb-8 text-blue-400 font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer"
-          value={analysis?.coin || ""}
-          onChange={(e) => onSelect(e.target.value)}
-        >
-          {allCoins.map(c => <option key={c.id} value={c.id}>{c.name} ({c.symbol.toUpperCase()})</option>)}
-        </select>
+  const ComparisonCard = ({ analysis, onSelect, isWinner, side }) => (
+    <div className={`comparison-card ${isWinner ? 'comparison-card-winner' : ''}`}>
+      <div className="card-glow"></div>
+      <div className="card-content">
+        {isWinner && (
+          <div className="winner-badge">
+            <Sparkles className="winner-badge-icon" />
+            <span>Stronger Signal</span>
+          </div>
+        )}
+        
+        <label className="card-label">Select Asset</label>
+        <div className="select-wrapper">
+          <select 
+            className="card-select"
+            value={analysis?.coin || ""}
+            onChange={(e) => onSelect(e.target.value)}
+          >
+            {allCoins.map(c => (
+              <option key={c.id} value={c.id}>
+                {c.name} ({c.symbol.toUpperCase()})
+              </option>
+            ))}
+          </select>
+        </div>
 
         {analysis ? (
-          <div className="space-y-8 animate-in fade-in zoom-in duration-500">
-            <div className="text-center">
-              <p className="text-gray-400 text-xs uppercase font-bold tracking-tighter mb-1">Live Valuation</p>
-              <p className="text-4xl font-mono font-bold text-white tracking-tight">
+          <div className="card-analysis">
+            {/* Price Section */}
+            <div className="price-section">
+              <p className="price-label">Live Valuation</p>
+              <p className="price-value">
                 ${analysis.current_price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </p>
             </div>
 
-            <div className={`p-6 rounded-2xl border ${analysis.prediction === 'Rise' ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-rose-500/5 border-rose-500/20'}`}>
-              <div className="flex items-center gap-2 mb-3">
-                <BrainCircuit size={20} className="text-purple-400" />
-                <span className="text-xs font-black uppercase text-gray-400">AI Momentum Forecast</span>
+            {/* Prediction Section */}
+            <div className={`prediction-section ${
+              analysis.prediction === 'Rise' ? 'prediction-rise' : 'prediction-fall'
+            }`}>
+              <div className="prediction-section-bg"></div>
+              <div className="prediction-header">
+                <BrainCircuit className="prediction-header-icon" size={20} />
+                <span className="prediction-header-label">AI Momentum Forecast</span>
               </div>
-              <div className="flex items-center justify-between">
-                <p className={`text-3xl font-black ${analysis.prediction === 'Rise' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                  {analysis.prediction}
-                </p>
-                {analysis.prediction === 'Rise' ? <TrendingUp className="text-emerald-400" /> : <TrendingDown className="text-rose-400" />}
+              <div className="prediction-content">
+                <p className="prediction-value">{analysis.prediction}</p>
+                {analysis.prediction === 'Rise' ? 
+                  <TrendingUp className="prediction-icon" size={36} /> : 
+                  <TrendingDown className="prediction-icon" size={36} />
+                }
               </div>
             </div>
+
+            {/* Confidence Section */}
+            {analysis.confidence && (
+              <div className="confidence-section">
+                <p className="confidence-label">Model Confidence</p>
+                <p className="confidence-text">{analysis.confidence}</p>
+              </div>
+            )}
           </div>
         ) : (
-          <div className="h-40 flex items-center justify-center text-gray-600 italic">Syncing market data...</div>
+          <div className="card-loading">
+            <Loader2 className="card-loading-spinner" />
+            <p className="card-loading-text">Syncing market data...</p>
+          </div>
         )}
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-200 p-6 md:p-12 font-sans">
-      <div className="max-w-6xl mx-auto">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
-          <div>
-            <Link to="/dashboard" className="group text-gray-500 flex items-center gap-2 text-sm mb-4 hover:text-blue-400 transition-colors">
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
+    <div className="comparison-container">
+      {/* Animated Background */}
+      <div className="comparison-background">
+        <div className="comparison-orb orb-1"></div>
+        <div className="comparison-orb orb-2"></div>
+        <div className="comparison-orb orb-3"></div>
+      </div>
+
+      <div className="comparison-wrapper">
+        {/* Header */}
+        <header className="comparison-header">
+          <div className="header-left">
+            <Link to="/dashboard" className="back-link">
+              <ArrowLeft className="back-link-icon" size={16} />
+              <LayoutDashboard size={20} />
+              <span>Back to Dashboard</span>
             </Link>
-            <h1 className="text-5xl font-extrabold tracking-tighter text-white">
-              Comparison <span className="text-blue-500">Engine</span>
+            <h1 className="page-title">
+              <span className="title-main">Comparison</span>
+              <span className="title-accent">Engine</span>
             </h1>
-            <p className="text-gray-500 mt-2 font-medium">Parallel AI Analysis for Strategic Entries</p>
           </div>
-          <div className="flex items-center gap-4 bg-[#1e293b] p-4 rounded-2xl border border-gray-800">
-            <Scale className="text-blue-500" size={32} />
-            {loading && <Loader2 className="animate-spin text-blue-500" />}
+          
+          <div className="header-status">
+            <div className="status-icon-wrapper">
+              <div className="status-icon-glow"></div>
+              <Scale className="status-icon" size={32} />
+            </div>
+            {loading && <Loader2 className="status-spinner" />}
           </div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+        {/* Comparison Grid */}
+        <div className="comparison-grid">
           <ComparisonCard 
             analysis={dataA} 
             onSelect={setCoinA} 
             isWinner={getVerdict() === dataA?.coin}
+            side="left"
           />
+          
+          {/* VS Divider */}
+          <div className="vs-divider">
+            <div className="vs-divider-line"></div>
+            <div className="vs-badge">
+              <Activity className="vs-badge-icon" />
+              <span>VS</span>
+            </div>
+            <div className="vs-divider-line"></div>
+          </div>
+          
           <ComparisonCard 
             analysis={dataB} 
             onSelect={setCoinB} 
             isWinner={getVerdict() === dataB?.coin}
+            side="right"
           />
         </div>
 
-        {/* Dynamic Verdict Logic */}
+        {/* Verdict Section */}
         {dataA && dataB && (
-          <div className="mt-16 p-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent animate-in slide-in-from-bottom duration-1000">
-            <div className="bg-[#1e293b]/50 backdrop-blur-xl p-10 rounded-3xl text-center border border-white/5">
-              <div className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
-                <Zap size={14} /> AI Recommendation
+          <div className="verdict-section">
+            <div className="verdict-glow"></div>
+            <div className="verdict-content">
+              <div className="verdict-badge">
+                <Zap className="verdict-badge-icon" size={14} />
+                <span>AI Recommendation</span>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4">
+              
+              <h2 className="verdict-title">
                 {getVerdict() === "Neutral" 
                   ? "Market Sentiment is Symmetrical" 
                   : `${getVerdict().toUpperCase()} shows stronger bullish signals`}
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              
+              <p className="verdict-description">
                 The Decision Support System suggests {getVerdict() === "Neutral" 
                   ? "waiting for a clearer divergence in price action." 
                   : `prioritizing ${getVerdict()} for current-window long positions.`}
